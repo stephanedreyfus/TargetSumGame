@@ -1,18 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {View, Text, StyleSheet} from 'react-native';
+import {TouchableOpacity, Text, StyleSheet} from 'react-native';
 
 class RandomNumber extends React.Component {
   static propTypes = {
     number: PropTypes.number.isRequired,
   };
 
+  handlePress = () => {
+    console.log(this.props.number);
+  };
+
   render() {
     return (
-      <View >
+      <TouchableOpacity onPress={this.handlePress}>
         <Text style={styles.number}>{this.props.number}</Text>
-      </View>
+      </TouchableOpacity>
     );
   }
 }

@@ -31,11 +31,13 @@ class Game extends React.Component {
 }
 
 const styles = StyleSheet.create({
+
   container: {
     backgroundColor: '#a13bef',
     flex: 1,
     paddingTop: 30,
   },
+
   target: {
     fontSize: 40,
     margin: 50,
@@ -43,12 +45,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#3befa1',
     borderRadius: 10,
   },
+
   numberContainer: {
     flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-around',
   },
+  
 });
 
 export default Game;
