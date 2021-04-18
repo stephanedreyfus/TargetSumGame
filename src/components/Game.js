@@ -57,7 +57,9 @@ class Game extends React.Component {
               key={idx}
               id={idx}
               number={randomNumber}
-              isDisabled={this.isNumberSelected(idx)}
+              isDisabled={
+                this.isNumberSelected(idx) || gameStatus !== 'PLAYING'
+              }
               onPress={this.selectNumber}
             />
           )}
