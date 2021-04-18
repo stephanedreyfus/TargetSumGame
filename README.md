@@ -7,7 +7,6 @@
 Written using VSCode while running an Android simulator.
 
 TODOS:
-- Shuffle random number array before mapping.
 - Get those colors right!
 
 [1]:(https://www.linkedin.com/learning/react-native-essential-training/)
