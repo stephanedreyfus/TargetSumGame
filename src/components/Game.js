@@ -7,9 +7,11 @@ import {View, Text, StyleSheet} from 'react-native';
 class Game extends React.Component {
   static propTypes = {
     randomNumberCount: PropTypes.number.isRequired,
+    initialSeconds: PropTypes.number.isRequired,
   };
   state = {
     selectedIds: [],
+    remainingSeconds: this.props.initialSeconds,
   };
   randomNumbers = Array
     .from({ length: this.props.randomNumberCount })
@@ -18,6 +20,22 @@ class Game extends React.Component {
     .slice(0, this.props.randomNumberCount - 2)
     .reduce((acc, curr) => acc + curr, 0);
     // TODO: Shuffle random numbers array
+
+  componentDidMount() {
+    this.intervalId = setInterval(() => {
+      this.setState((prevState) => {
+        return { remainingSeconds: prevState.remainingSeconds - 1};
+      }, () => {
+        if (this.state.remainingSeconds === 0) {
+          clearInterval(this.intervalId);
+        }
+      });
+    }, 1000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.intervalId);
+  }
 
   isNumberSelected = (indexNum) => {
     return this.state.selectedIds.indexOf(indexNum) >= 0;
@@ -33,6 +51,9 @@ class Game extends React.Component {
     const sumSelected = this.state.selectedIds.reduce((acc, curr) => {
       return acc + this.randomNumbers[curr];
     }, 0);
+    if (this.state.remainingSeconds === 0) {
+      return 'LOST';
+    }
     if (sumSelected < this.target) {
       return 'PLAYING';
     }
@@ -64,7 +85,9 @@ class Game extends React.Component {
             />
           )}
         </View>
-        <Text style={styles.target}>{gameStatus}</Text>
+        <Text style={[styles.counter, styles[`STATUS_${gameStatus}`]]}>
+          {`You Have ${this.state.remainingSeconds} seconds remaining!`}
+        </Text>
       </View>
     );
   }
@@ -90,6 +113,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-around',
+  },
+
+  counter: {
+    fontSize: 15,
+    textAlign: 'center',
+    margin: 20,
+    borderRadius: 10,
   },
 
   STATUS_PLAYING: {
