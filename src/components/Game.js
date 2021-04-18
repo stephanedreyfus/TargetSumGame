@@ -9,7 +9,7 @@ class Game extends React.Component {
     randomNumberCount: PropTypes.number.isRequired,
   };
   state = {
-    selectedNumbers: [],
+    selectedIds: [],
   };
   randomNumbers = Array
     .from({ length: this.props.randomNumberCount })
@@ -20,19 +20,37 @@ class Game extends React.Component {
     // TODO: Shuffle random numbers array
 
   isNumberSelected = (indexNum) => {
-    return this.state.selectedNumbers.indexOf(indexNum) >= 0;
+    return this.state.selectedIds.indexOf(indexNum) >= 0;
   };
 
   selectNumber = (indexNum) => {
     this.setState((prevState) => ({
-      selectedNumbers: [...prevState.selectedNumbers, indexNum],
+      selectedIds: [...prevState.selectedIds, indexNum],
     }));
   };
 
+  gameStatus = () => {
+    const sumSelected = this.state.selectedIds.reduce((acc, curr) => {
+      return acc + this.randomNumbers[curr];
+    }, 0);
+    if (sumSelected < this.target) {
+      return 'PLAYING';
+    }
+    if (sumSelected === this.target) {
+      return 'WON';
+    }
+    if (sumSelected > this.target) {
+      return 'LOST';
+    }
+  }
+
   render() {
+    const gameStatus = this.gameStatus();
     return (
       <View style={styles.container}>
-        <Text style={styles.target}>{this.target}</Text>
+        <Text style={[styles.target, styles[`STATUS_${gameStatus}`]]}>
+          {this.target}
+        </Text>
         <View style={styles.numberContainer}>
           {this.randomNumbers.map((randomNumber, idx) =>
             <RandomNumber
@@ -44,6 +62,7 @@ class Game extends React.Component {
             />
           )}
         </View>
+        <Text style={styles.target}>{gameStatus}</Text>
       </View>
     );
   }
@@ -61,7 +80,6 @@ const styles = StyleSheet.create({
     fontSize: 40,
     margin: 50,
     textAlign: 'center',
-    backgroundColor: '#3befa1',
     borderRadius: 10,
   },
 
@@ -70,6 +88,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-around',
+  },
+
+  STATUS_PLAYING: {
+    backgroundColor: '#3befa1',
+  },
+
+  STATUS_WON: {
+    backgroundColor: 'white',
+  },
+
+  STATUS_LOST: {
+    backgroundColor: 'red',
   },
 
 });
